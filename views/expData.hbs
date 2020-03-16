@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Admin</title>
+    <link rel="stylesheet" href="cssFiles/css/bootstrap.min.css">
+</head>
+
+<body>
+  
+      
+    <div class="row">
+         <div class="col-md-3"></div>
+        <div class="col-md-6">
+              <h3> Data Karyawan</h1>
+             <button class="btn btn-sm btn-danger" onClick="resetAdd()" data-toggle="modal" data-target="#myModalAdd">Tambah Data</button>
+                <a href="/logout" class="btn btn-default pull-right">logout</a>
+            <table class="table table-borderless" id="mytable">
+                <thead>
+                    <tr>
+                        <td>No</td>
+                        <td>Nik</td>
+                        <td>Nama Karyawan</td>
+                        <td>Alamat</td>
+                    </tr>
+                </thead>
+                <tbody>
+                     {{#each results}}
+                    <tr>
+                        <td>{{@index}}</td>
+                        <td>{{ nik }}</td>
+                        <td>{{ nama_karyawan }}</td>
+                        <td>{{ alamat }}</td>
+                         <td>
+                        <a href="#" class="btn btn-sm btn-sm btn-warning edit" data-id_karyawan="{{ id_karyawan }}" data-nama_karyawan="{{ nama_karyawan }}" data-alamat="{{ alamat }}"  data-nik="{{ nik }}" data-nik="{{ nik }}">Edit</a>
+                        <a href="#" class="btn btn-sm btn-sm btn-info delete " data-id_karyawan="{{ id_karyawan }}">Delete</a>
+                    </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+  <!-- Modal Add -->
+      <form action="/tambahData" method="POST" id="formAdd">
+        <div class="modal fade" id="myModalAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title" id="exampleModalLabel">Tambah Anggota</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+             </div>
+             <div class="modal-body">
+               <div class="form-group">
+                   <input type="number" name="nik" class="form-control" placeholder="Masukan Nik" required>
+               </div>
+ 
+               <div class="form-group">
+                   <input type="text" name="nama" class="form-control" placeholder="Nama lengkap" required>
+               </div>
+                <div class="form-group">
+                   <input type="text" name="alamat" class="form-control alamat" placeholder="Alamat" required>
+               </div>
+             </div>
+             <div class="modal-footer">
+               <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Batal</button>
+               <button type="submit" class="btn btn-sm btn-primary">Simpan</button>
+             </div>
+           </div>
+         </div>
+        </div>
+     </form>
+ 
+
+   <!-- Modal Update -->
+   <form action="/updateData" method="GET">
+       <div class="modal fade" id="EditModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Edit </h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                  <div class="form-group">
+                  <input type="number" name="nik" class="form-control " placeholder=" Nik" required>
+              </div>
+              <div class="form-group">
+                  <input type="text" name="nama_karyawan" class="form-control " placeholder=" Name" required>
+              </div>
+ 
+              <div class="form-group">
+                  <input type="text" name="alamat" class="form-control " placeholder="alamat" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <input type="hidden" name="id_karyawan" >
+              <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-sm btn-primary">Update</button>
+            </div>
+          </div>
+        </div>
+       </div>
+  </form>
+
+
+    <!-- Modal Delete -->
+      <form id="add-row-form" action="/deleteData" method="GET">
+         <div class="modal fade" id="DeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+               <div class="modal-content">
+                   <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                   </div>
+                   <div class="modal-body">
+                    <p>Anda yakin menghapus data ini?</p>
+                   </div>
+                   <div class="modal-footer">
+                        <input type="hidden" name="id_karyawan" class="form-control " required>
+                        <button type="submit" class="btn btn-sm btn-success">Yakin</button>
+                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Tidak</button>
+                   </div>
+                    </div>
+            </div>
+         </div>
+     </form>
+ <script src="/cssFiles/js/jquery.js"></script>
+<script src="/cssFiles/js/bootstrap.js"></script>
+<script>
+    $(document).ready(function(){
+     //tampilkan data ke modal untuk edit
+      $('#mytable').on('click','.edit',function(){
+        var id_karyawan = $(this).data('id_karyawan');
+        var nik = $(this).data('nik');
+        var nama_karyawan = $(this).data('nama_karyawan');
+        var alamat = $(this).data('alamat');
+        $('#EditModal').modal('show');
+        $("[name='nik']").val(nik);
+        $("[name='nama_karyawan']").val(nama_karyawan);
+        $("[name='alamat']").val(alamat);
+        $("[name='id_karyawan']").val(id_karyawan);
+      });
+        //tampilkan modal hapus record
+        $('#mytable').on('click','.delete',function(){
+        var id_karyawan = $(this).data('id_karyawan');
+        $('#DeleteModal').modal('show');
+        $("[name='id_karyawan']").val(id_karyawan);
+        }); 
+    });
+      function resetAdd(){
+         $('#formAdd')[0].reset();
+          };
+
+</script>
+
+</body>
+</html>
