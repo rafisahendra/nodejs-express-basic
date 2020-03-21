@@ -18,7 +18,7 @@ koneksi.connect(function(error){
     if(!!error){
         console.log('error koneksi');
     }else{
-        console.log('terhubung ke database'); 
+        // console.log('terhubung ke database'); 
     }
 });
 
@@ -37,16 +37,17 @@ app.use(sessionfuu({
 
 
 // Cek Session di Home admin
-app.get('/home',(req, resp) => {
+app.get('/home',function(req, resp){
   session = req.session;
   if(session.uniqueIdUlevel != 'admin'){
       resp.redirect('/');  
       }else{
         let sql = "SELECT * FROM tbl_karyawan";
-        let querySql = koneksi.query(sql, (err, results) => {
+        let querySql = koneksi.query(sql, function(err, rows , field) {
         if(err) throw err;
         resp.render('expData',{
-          results: results
+          karyawan : rows,
+          tittle   : "Halaman Admin"
           });
         });
      
@@ -54,10 +55,11 @@ app.get('/home',(req, resp) => {
 });
 
 /// tambah data denga Method Get(body) req.body.value
-app.post('/tambahData',(req,resp)=>{
-  let data = {nik: req.body.nik, nama_karyawan: req.body.nama, alamat: req.body.alamat };
+
+app.post('/tambahData', function(req , resp) {
   let sql = "INSERT INTO tbl_karyawan SET ?";
-  let querySql = koneksi.query(sql, data,(err, results) => {
+  let data = {nik: req.body.nik, nama_karyawan: req.body.nama, alamat: req.body.alamat };
+  let querySql = koneksi.query(sql, data, function(err, results) {
     if(err) throw err;
     resp.redirect('/home');
   });
@@ -68,7 +70,7 @@ app.post('/tambahData',(req,resp)=>{
 // update data denga Method Get(query) req.query.value
 app.get('/updateData',(req, resp) => {
   let sql = "UPDATE tbl_karyawan SET nik='"+req.query.nik+"', nama_karyawan='"+req.query.nama_karyawan+"',alamat='"+req.query.alamat+"' WHERE id_karyawan="+req.query.id_karyawan;
-  let querySql = koneksi.query(sql, (err, results) => {
+  let querySql = koneksi.query(sql, (err, rows) => {
     if(err) throw err;
     resp.redirect('/home');
   });
@@ -77,7 +79,7 @@ app.get('/updateData',(req, resp) => {
 // delete data denga Method Get(query) req.query.value
 app.get('/deleteData',(req, resp) => {
   let sql = "DELETE FROM tbl_karyawan WHERE id_karyawan="+req.query.id_karyawan+'';
-  let querySql = koneksi.query(sql, (err, results) => {
+  let querySql = koneksi.query(sql, (err, rows) => {
     if(err) throw err;
       resp.redirect('/home');
   });
@@ -86,7 +88,7 @@ app.get('/deleteData',(req, resp) => {
 
 // ===================================== Untuk Login ==========================================
 
-app.get('/', function(req, resp){  
+app.get('/', (req, resp) =>{  
   resp.render('login');
 });
 
@@ -96,7 +98,7 @@ app.post('/login_cek', function(req, resp){
     if(!!error){
         console.log('Error Login');
     }else{
-        console.log('Succesfull Login!\n'); 
+        // console.log('Succesfull Login!\n'); 
         if(req.body.email == rows[0].email && req.body.password == rows[0].password){
           session.uniqueIdUname_lengkap = rows[0].nama_lengkap;
           session.uniqueIdUlevel = rows[0].level;
@@ -111,9 +113,9 @@ app.post('/login_cek', function(req, resp){
     
 });
  
-app.get('/logout', function(req, resp){
+app.get('/logout', (req, resp) =>{
   req.session.destroy(function(error){
-       console.log(error);
+      //  console.log(error);
        resp.redirect('/');
 
   })
@@ -121,10 +123,10 @@ app.get('/logout', function(req, resp){
 
 // =========================================== end login ========================================
 
+const port = 9000;
+app.listen(port, () => 
+console.log(`Server running on port ${port}!`));
 
-
-app.listen(7000,function(){
-});
 
 
 

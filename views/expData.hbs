@@ -3,7 +3,7 @@
 <html>
 
 <head>
-    <title>Admin</title>
+    <title>{{ tittle }}</title>
     <link rel="stylesheet" href="cssFiles/css/bootstrap.min.css">
 </head>
 
@@ -16,6 +16,7 @@
               <h3> Data Karyawan</h1>
              <button class="btn btn-sm btn-danger" onClick="resetAdd()" data-toggle="modal" data-target="#myModalAdd">Tambah Data</button>
                 <a href="/logout" class="btn btn-default pull-right">logout</a>
+
             <table class="table table-borderless" id="mytable">
                 <thead>
                     <tr>
@@ -26,9 +27,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                     {{#each results}}
+                     {{#each karyawan }}
                     <tr>
-                        <td>{{@index}}</td>
+                        <td>{{ @index }}</td>
                         <td>{{ nik }}</td>
                         <td>{{ nama_karyawan }}</td>
                         <td>{{ alamat }}</td>
@@ -124,7 +125,7 @@
                    </div>
                    <div class="modal-footer">
                         <input type="hidden" name="id_karyawan" class="form-control " required>
-                        <button type="submit" class="btn btn-sm btn-success">Yakin</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Yakin</button>
                         <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Tidak</button>
                    </div>
                     </div>
